@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.shortcuts import render
 from wishlist.models import BarangWishlist
 from django.http import HttpResponse
 from django.core import serializers
@@ -66,7 +65,7 @@ def login_user(request):
         else:
             messages.info(request, 'Username atau Password salah!')
     context = {}
-    return render(request, 'login.html', context)
+    return render(request, 'login.html', context)                                                                                  
 
 def logout_user(request):
     logout(request)

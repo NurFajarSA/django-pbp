@@ -1,11 +1,22 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
+  <nav class="navbar" style="background-color: #e6f5ff;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        Wishlist App
+        <small class="text-muted"> by Nur Fajar</small>
+        {% if user.is_authenticated %}
+        <button type="button" class="btn btn-primary"><a class="text-white" href="{% url 'wishlist:logout' %}">Logout</a></button>
+        {% endif %}
+      </a>
+    </div>
+  </nav>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
   {% block meta %}
   {% endblock meta %}
 </head>
