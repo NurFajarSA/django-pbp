@@ -1,24 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<script type="text/javascript">
-    $.ajax({
-        type: "GET",
-        url: "/wishlist/json/",
-        dataType: 'json',
-        success: function(data) {
-            console.log(data);
-            for (var i=0; i<data.length; i++) {
-                var row = $('<tr><td>' + data[i].fields.nama_barang+ '</td><td>' + data[i].fields.harga_barang + '</td><td>' + data[i].fields.deskripsi + '</td></tr>');
-                $('#my-table').append(row);
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown){
-            alert('Error: ' + textStatus + ' - ' + errorThrown);
-        }
-    });
-</script>
-
 <br></br>
 <div class="container" >
   <table class="table table-striped table-hover" id="my-table">
@@ -29,25 +11,77 @@
       </tr>
   </table>  
   <br/>
-  <!-- Membuat form input wishlist -->
-  <table>
-        <tr>
-            <td>Nama Barang</td>
-            <td><input type="text" id="nama_barang" name="nama_barang"></td>
-        </tr>
-        <tr>
-            <td>Harga Barang</td>
-            <td><input type="text" id="harga_barang" name="harga_barang"></td>
-        </tr>
-        <tr>
-            <td>Deskripsi</td>
-            <td><input type="text" id="deskripsi" name="deskripsi"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><button type="button" id="btn_simpan">Simpan</button></td>
-        </tr>
-  </table>
-  <p class="text-muted">Sesi terakhir login: {{ last_login }}</p>
+  <h4>Tambah Baru</h4>
+  <form method="POST" action="">
+    {% csrf_token %}
+    <table>
+      <tr>
+        <td>Nama Barang: </td>
+        <td><input type="text" id="nama_barang" name="nama_barang" placeholder="Nama Barang" class="form-control"></td>
+      </tr>
+
+      <tr>
+        <td>Harga Barang: </td>
+        <td><input type="number" id="harga_barang" name="harga_barang" placeholder="Harga Barang" class="form-control"></td>
+      </tr>
+
+      <tr>
+        <td>Deskripsi: </td>
+        <td><textarea class="form-control" id="deskripsi" name="deskripsi"></textarea></td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td><input class="btn btn-primary" type="submit" value="Submit" id="newBtn"></td>
+      </tr>
+    </table>
+  </form>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  function postNew(e) {
+    e.preventDefault()
+    const namaBarang = $("#nama_barang").val()
+    const hargaBarang = $("#harga_barang").val()
+    const deskripsi = $("#deskripsi").val()
+
+    const data = {
+      nama_barang: namaBarang,
+      harga_barang: hargaBarang,
+      deskripsi,
+      csrfmiddlewaretoken: "{{ csrf_token }}"
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: "{% url 'wishlist:add_wishlist' %}",
+      data: data, 
+      success: () => {
+        alert("Done!")
+        fetchData()
+      },
+      // contentType: "application/json",
+      dataType: 'json'
+    });
+  }
+
+  function writeTable(data) {
+    const table = $("#my-table")
+    table.empty()
+    for (var i=0; i<data.length; i++) {
+                var row = $('<tr><td>' + data[i].fields.nama_barang+ '</td><td>' + data[i].fields.harga_barang + '</td><td>' + data[i].fields.deskripsi + '</td></tr>');
+                $('#my-table').append(row);
+            }
+  }
+
+  function fetchData() {
+    $.get("/wishlist/json", writeTable)
+  }
+
+  $(document).ready(() => {
+    $("#newBtn").click(postNew)
+    fetchData()
+  })
+</script>
 {% endblock content %}
