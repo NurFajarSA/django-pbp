@@ -68,11 +68,8 @@
 
   function writeTable(data) {
     const table = $("#my-table")
-    table.empty()
-    for (var i=0; i<data.length; i++) {
-                var row = $('<tr><td>' + data[i].fields.nama_barang+ '</td><td>' + data[i].fields.harga_barang + '</td><td>' + data[i].fields.deskripsi + '</td></tr>');
+    var row = $('<tr><td>' + data[data.length-1].fields.nama_barang+ '</td><td>' + data[data.length-1].fields.harga_barang + '</td><td>' + data[data.length-1].fields.deskripsi + '</td></tr>');
                 $('#my-table').append(row);
-            }
   }
 
   function fetchData() {
